@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quest-app
+spec:
+  selector:
+    matchLabels:
+      app: quest-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: quest-app
+    spec:
+      containers:
+        - name: quest-app
+          image: youtubedilruba/questapp:latest
+          imagePullPolicy: Always
+          ports:
+            - name: listen-port
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 200m
+              memory: 1Gi
+            limits:
+              cpu: 1
+              memory: 1Gi
