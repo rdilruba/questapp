@@ -3,6 +3,7 @@ package com.project.questapp.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,13 +31,16 @@ public class UserController {
 	}
 	
 	@GetMapping
-	public List<User> getAllUsers(){
-		return userService.getAllUsers();
+	public List<UserResponse> getAllUsers(){
+		return userService.getAllUsers().stream().map(u -> new UserResponse(u)).toList();
 	}
 	
 	@PostMapping
-	public User createUser(@RequestBody User newUser) {
-		return userService.saveOneUser(newUser);
+	public ResponseEntity<Void> createUser(@RequestBody User newUser) {
+		User user = userService.saveOneUser(newUser);
+		if(user != null) 
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@GetMapping("/{userId}")
@@ -49,8 +53,12 @@ public class UserController {
 	}
 	
 	@PutMapping("/{userId}")
-	public User updateOneUser(@PathVariable Long userId, @RequestBody User newUser) {
-		return userService.updateOneUser(userId, newUser);
+	public ResponseEntity<Void> updateOneUser(@PathVariable Long userId, @RequestBody User newUser) {
+		User user = userService.updateOneUser(userId, newUser);
+		if(user != null) 
+			return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 	
 	@DeleteMapping("/{userId}")

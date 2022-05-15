@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.project.questapp.entities.User;
@@ -54,7 +55,11 @@ public class UserService {
 	}
 
 	public void deleteById(Long userId) {
+		try {
 		userRepository.deleteById(userId);
+		}catch(EmptyResultDataAccessException e) { //user zaten yok, db'den empty result gelmiş
+			System.out.println("User "+userId+" doesn't exist"); //istersek loglayabiliriz
+		}
 	}
 
 	public User getOneUserByUserName(String userName) {
