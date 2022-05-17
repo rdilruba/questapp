@@ -17,8 +17,9 @@ spec:
           image: youtubedilruba/questapp:latest
           imagePullPolicy: Always
           ports:
-            - name: listen-port
-              containerPort: 8080
+            - name: http
+              containerPort: 8081
+              protocol: TCP
           resources:
             requests:
               cpu: 200m
